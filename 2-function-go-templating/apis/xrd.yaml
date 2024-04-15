@@ -1,0 +1,60 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xiamselftrustroles.example.crossplane.io
+spec:
+  group: example.crossplane.io
+  names:
+    kind: XIAMSelfTrustRole
+    listKind: XIAMSelfTrustRoleList
+    plural: xiamselftrustroles
+    singular: xiamselftrustrole
+  claimNames:
+    kind: IAMSelfTrustRole
+    listKind: IAMSelfTrustRoleList
+    plural: iamselftrustroles
+    singular: iamselftrustrole
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          description: AWS explicit self Trust Example. See https://aws.amazon.com/blogs/security/announcing-an-update-to-iam-role-trust-policy-behavior/
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                parameters:
+                  type: object
+                  properties:
+                    providerConfigName:
+                      type: string
+                      default: default
+                    action:
+                      description: IAM Actions. Defaults to [ "sts:AssumeRole" ]
+                      type: array
+                      items:
+                        type: string
+                      default:
+                      - "sts:AssumeRole"
+                    additionalPrincipals:
+                      description: 'Additional AWS principals to add to Policy. Default: [].'
+                      type: array
+                      items:
+                        type: string
+                    service:
+                      description: 'Services to add to Policy. Default: [ "eks.amazonaws.com" ].'
+                      default:
+                      - "eks.amazonaws.com"
+                      type: array
+                      items:
+                        type: string
+            status:
+              type: object
+              properties:
+                arn:
+                  description: ARN of the Role
+                  type: string
+

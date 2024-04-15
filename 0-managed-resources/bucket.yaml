@@ -1,0 +1,12 @@
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: bensheim-bucket
+  labels:
+    owner: bensheim
+spec:
+  forProvider:
+    region: eu-central-1
+    objectLockEnabled: true
+    tags:
+      Name: bensheim-bucket

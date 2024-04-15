@@ -1,0 +1,91 @@
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  annotations:
+    crossplane.io/composition-resource-name: self-trust-role
+    crossplane.io/external-create-pending: "2024-02-18T18:02:17Z"
+    crossplane.io/external-create-succeeded: "2024-02-18T18:02:17Z"
+    crossplane.io/external-name: self-trust-test-wgqjm
+  creationTimestamp: "2024-02-18T18:01:46Z"
+  finalizers:
+  - finalizer.managedresource.crossplane.io
+  generateName: self-trust-test-
+  generation: 7
+  labels:
+    crossplane.io/claim-name: ""
+    crossplane.io/claim-namespace: ""
+    crossplane.io/composite: self-trust-test
+  name: self-trust-test-wgqjm
+  ownerReferences:
+  - apiVersion: example.crossplane.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: XIAMSelfTrustRole
+    name: self-trust-test
+    uid: 19bcc662-5dcd-4d6c-ba48-7be4c8111ef7
+  resourceVersion: "1341751"
+  uid: 777b43e1-d543-4ac9-934b-a808645e7083
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": [
+                "eks.amazonaws.com"
+              ]
+            },
+            "Action": [
+              "sts:AssumeRole"
+            ]
+          }
+        ]
+      }
+    maxSessionDuration: 3600
+    path: /
+    tags:
+      crossplane-kind: role.iam.aws.upbound.io
+      crossplane-name: self-trust-test-wgqjm
+      crossplane-providerconfig: default
+  initProvider: {}
+  managementPolicies:
+  - '*'
+  providerConfigRef:
+    name: default
+status:
+  atProvider:
+    arn: arn:aws:iam::609897127049:role/self-trust-test-wgqjm
+    assumeRolePolicy: '{"Statement":[{"Action":["sts:AssumeRole"],"Effect":"Allow","Principal":{"Service":["eks.amazonaws.com"]}}],"Version":"2012-10-17"}'
+    createDate: "2024-02-18T18:02:18Z"
+    description: ""
+    forceDetachPolicies: false
+    id: self-trust-test-wgqjm
+    maxSessionDuration: 3600
+    path: /
+    permissionsBoundary: ""
+    tags:
+      crossplane-kind: role.iam.aws.upbound.io
+      crossplane-name: self-trust-test-wgqjm
+      crossplane-providerconfig: default
+    tagsAll:
+      crossplane-kind: role.iam.aws.upbound.io
+      crossplane-name: self-trust-test-wgqjm
+      crossplane-providerconfig: default
+    uniqueId: AROAY4AFTTSEYRVQNRHRX
+  conditions:
+  - lastTransitionTime: "2024-02-18T18:03:59Z"
+    reason: ReconcileSuccess
+    status: "True"
+    type: Synced
+  - lastTransitionTime: "2024-02-18T18:02:20Z"
+    reason: Available
+    status: "True"
+    type: Ready
+  - lastTransitionTime: "2024-02-18T18:02:18Z"
+    reason: Success
+    status: "True"
+    type: LastAsyncOperation

@@ -1,0 +1,14 @@
+apiVersion: example.crossplane.io/v1alpha1
+kind: XIAMSelfTrustRole
+metadata:
+  name: self-trust-test
+spec:
+  parameters:
+    providerConfigName: default
+    additionalPrincipals:
+    - "arn:aws:iam::609897127049:user/bensheim"
+    action:
+    - "sts:AssumeRole"
+    service:
+    - "eks.amazonaws.com"
+    - "ec2.amazonaws.com"

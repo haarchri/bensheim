@@ -1,0 +1,60 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: xiamselftrustrole.example.crossplane.io
+spec:
+  writeConnectionSecretsToNamespace: upbound-system
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1alpha1
+    kind: XIAMSelfTrustRole
+  mode: Pipeline
+  pipeline:
+    - step: self-trust-role
+      functionRef:
+        name: function-go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        kind: GoTemplate
+        source: Inline
+        inline:
+          template: |
+            apiVersion: iam.aws.upbound.io/v1beta1
+            kind: Role
+            metadata:
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: self-trust-role
+            spec:
+              providerConfigRef:
+                name: {{ default "default" $.observed.composite.resource.spec.parameters.providerConfigName }}
+              forProvider:
+                assumeRolePolicy: |
+                  {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Principal": {
+                        {{/* get the arn from the status if available */}}
+                        {{- $arn := (dig "resources" "self-trust-role" "resource" "status" "atProvider" "arn" "" $.observed ) }}
+                        {{- $principals := concat (list $arn) (dig "additionalPrincipals" (list "") $.observed.composite.resource.spec.parameters ) }}
+                        {{- if (compact $principals) }}
+                          "AWS": {{ compact $principals | toJson }}, 
+                        {{- end }}
+                          "Service": {{ $.observed.composite.resource.spec.parameters.service | toJson }}
+                        },
+                        "Action": {{ $.observed.composite.resource.spec.parameters.action | toJson }}
+                      }
+                    ]
+                  }
+            ---
+            apiVersion: {{ $.observed.composite.resource.apiVersion }}
+            kind: {{ $.observed.composite.resource.kind }}
+            {{ if $arn }}
+            status:
+              arn: {{ $arn }}
+            {{ else }}
+            status: {}
+            {{end }}
+    - step: automatically-detect-ready-composed-resources
+      functionRef:
+        name: function-auto-ready

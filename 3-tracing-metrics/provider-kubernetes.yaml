@@ -1,0 +1,6 @@
+apiVersion: metrics.crossplane.io/v1
+kind: ClusterMetric
+metadata:
+  name: provider-kubernetes-objects
+spec:
+  matchName: "objects.kubernetes.crossplane.io"
