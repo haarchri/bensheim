@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: upbound-provider-aws-s3
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v1.1.1
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v1.2.0
